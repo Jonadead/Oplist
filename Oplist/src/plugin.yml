@@ -1,0 +1,11 @@
+name: Oplist
+author: jonadead
+main: fr.jonadead.Oplist.Oplist
+version: 1.0
+commands:
+  isop:
+    description: Pour voir si vous etes op.
+    usage: /<command>
+  oplist:
+    description: Pour voir la liste des ops.
+    usage: /<command>
