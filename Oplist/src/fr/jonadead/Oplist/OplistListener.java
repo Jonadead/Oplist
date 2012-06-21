@@ -1,9 +1,11 @@
 package fr.jonadead.Oplist;
 
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,7 +18,7 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 public class OplistListener implements Listener{
 	
 	private Oplist plugin;
-	
+	Logger log = Logger.getLogger("Minecraft");
 
 	public OplistListener(Oplist plugin){
 		this.plugin = plugin;
@@ -27,8 +29,7 @@ public class OplistListener implements Listener{
 		
 		if(plugin.pManager == null && Bukkit.getServer().getPluginManager().isPluginEnabled("PermissionsEx")){
 		    plugin.pManager = PermissionsEx.getPermissionManager();
-		}
-		
+		}	
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
@@ -41,28 +42,35 @@ public class OplistListener implements Listener{
 		
 		if(params[0].equalsIgnoreCase("/isop")){
 			e.setCancelled(true);
+			log.info("[PLAYER_COMMAND] " + p.getName() + ": " + message);
 			
 			if(!plugin.hasPermission(p, "Oplist.isop")){
 				p.sendMessage(ChatColor.RED + "Vous n'avez pas les permissions pour cette commande !");
-				return;
-				
+				return;	
 			}
 			
-			if(params.length == 1){
-				
-				p.sendMessage(ChatColor.RED + "You are Op: " + p.isOp());
-				
+			if(params.length == 1){	
+				p.sendMessage(ChatColor.RED + "You are Op: " + p.isOp());		
 			}
-			
+			if(params.length == 2){
+				if(!plugin.hasPermission(p, "Oplist.isop.other")){
+					p.sendMessage(ChatColor.RED + "Vous n'avez pas les permissions pour cette commande !");
+					return;
+				}
+				if(Bukkit.getOfflinePlayer(params[1]) != null){
+					OfflinePlayer player = Bukkit.getOfflinePlayer(params[1]);
+						p.sendMessage(ChatColor.RED + player.getName() + " is Op: " + player.isOp());
+				}
+			}
 		}
-			
+		
 		if(params[0].equalsIgnoreCase("/oplist")){
 			e.setCancelled(true);
+			log.info("[PLAYER_COMMAND] " + p.getName() + ": " + message);
 			
 			if(!plugin.hasPermission(p, "Oplist.oplist")){
 				p.sendMessage(ChatColor.RED + "Vous n'avez pas les permissions pour cette commande !");
 				return;
-				
 			}
 			
 			if(params.length == 1){
@@ -72,25 +80,18 @@ public class OplistListener implements Listener{
 				Object[] Op_array = Oplist.toArray();
 				String Ops = "";
 				
-				for(int i=0;i < Op_array.length;i++)
-				{
+				for(int i=0;i < Op_array.length;i++){
 					Object[] Op_split = Op_array[i].toString().split("name=");
 					Op_split[1] = Op_split[1].toString().replace("]", "");
 					Op_split[1] = Op_split[1].toString().replace("}", "");
-					if(!(Ops == "")) 
-					{
+					if(!(Ops == "")){
 						Ops += ", ";
 					}
 					Ops +=Op_split[1];
 				}
-				
 				p.sendMessage(ChatColor.DARK_RED + "[Oplist]: " + ChatColor.WHITE + Ops);
-				return;
-				
+				return;	
 			}
-			
 		}
-		
 	}
-	
 }

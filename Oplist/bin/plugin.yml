@@ -1,11 +1,11 @@
 name: Oplist
-author: jonadead
+author: jonadead & JudgeDead_53
 main: fr.jonadead.Oplist.Oplist
-version: 1.0
+version: 1.1
 commands:
   isop:
-    description: Pour voir si vous etes op.
-    usage: /<command>
+    description: Pour voir si vous etes op ou un autre joueur.
+    usage: /<command> [player]
   oplist:
     description: Pour voir la liste des ops.
     usage: /<command>
